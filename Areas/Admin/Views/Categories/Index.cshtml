@@ -9,12 +9,15 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table sorting" id="categories">
     <thead>
         <tr>
             
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
+            </th>
+            <th>
+                Slug
             </th>
            
             <th></th>
@@ -22,12 +25,15 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+        <tr id="id_@item.Id">
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @item.Name
             </td>
+                <td>
+                    @item.Slug
+                </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>|
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a class="confirmDeletion" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 
             </td>
@@ -35,3 +41,20 @@
 }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        $("table#categories tbody").sortable({
+            items: "tr:not(.home)",
+            placeholder: "ui-state-higlight",
+            update: function () {
+                let ids = $("table#categories tbody").sortable("serialize");
+                let url = "/admin/categories/reorder";
+
+                $.post(url, ids, function () { });
+            }
+        })
+    </script>
+
+
+    }
